@@ -1,7 +1,11 @@
 micronaut:
   application:
     name: quasar
-
+  server:
+    host: ${SERVER_HOST:0.0.0.0}
+    port: ${SERVER_PORT:8080}
+    cors:
+      enabled: true
 
 netty:
   default:
@@ -9,4 +13,8 @@ netty:
       max-order: 3
 
 
-
+logger:
+  levels:
+    root: ${ROOT_LOGGING_LEVEL:INFO}
+    com:
+      quasar: ${LOGGING_LEVEL:INFO}

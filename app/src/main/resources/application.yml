@@ -18,3 +18,11 @@ logger:
     root: ${ROOT_LOGGING_LEVEL:INFO}
     com:
       quasar: ${LOGGING_LEVEL:INFO}
+    io:
+      micronaut:
+        http:
+          server:
+            netty:
+              RoutingInBoundHandler: ${LOGGING_LEVEL:INFO}
+              NettyHttpServer: ${LOGGING_LEVEL:INFO}
+          client: ${LOGGING_LEVEL:INFO}

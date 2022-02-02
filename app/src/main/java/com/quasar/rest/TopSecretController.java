@@ -1,8 +1,7 @@
 package com.quasar.rest;
 
 
-import com.quasar.model.Point;
-import com.quasar.rest.dto.QuasarResponse;
+import com.quasar.model.DecodedMessageAndLocation;
 import com.quasar.rest.dto.TopSecretRequest;
 import com.quasar.service.QuasarService;
 import io.micronaut.http.annotation.Body;
@@ -24,7 +23,7 @@ public class TopSecretController {
 
 
     @Post
-    public QuasarResponse post(@Body @Valid TopSecretRequest request) {
+    public DecodedMessageAndLocation post(@Body @Valid TopSecretRequest request) {
         log.debug("received POST: /topsecret {}", request);
         return quasarService.decodeMultipleMessages(request.getSatellites());
     }

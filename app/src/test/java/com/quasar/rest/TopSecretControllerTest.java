@@ -2,7 +2,7 @@ package com.quasar.rest;
 
 import com.quasar.model.InterceptedMessage;
 import com.quasar.model.Point;
-import com.quasar.rest.dto.QuasarResponse;
+import com.quasar.model.DecodedMessageAndLocation;
 import com.quasar.rest.dto.TopSecretRequest;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -10,7 +10,6 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.uri.UriBuilder;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
@@ -34,8 +33,8 @@ class TopSecretControllerTest extends AbstractRestControllerTest {
     @Test
     void postWithResponse() {
 
-        QuasarResponse quasarResponseMock = new QuasarResponse(new Point(-100.23, 4.56), "Some Mock Test");
-        when(quasarServiceMock.decodeMultipleMessages(any())).thenReturn(quasarResponseMock);
+        DecodedMessageAndLocation decodedMessageAndLocationMock = new DecodedMessageAndLocation(new Point(-100.23, 4.56), "Some Mock Test");
+        when(quasarServiceMock.decodeMultipleMessages(any())).thenReturn(decodedMessageAndLocationMock);
 
         List<InterceptedMessage> satellites = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -48,16 +47,16 @@ class TopSecretControllerTest extends AbstractRestControllerTest {
 
         URI uri = UriBuilder.of(ENDPOINT_URL).build();
         MutableHttpRequest request = HttpRequest.POST(uri, topSecretRequest);
-        HttpResponse<QuasarResponse> httpResponse = client.toBlocking().exchange(request, QuasarResponse.class);
+        HttpResponse<DecodedMessageAndLocation> httpResponse = client.toBlocking().exchange(request, DecodedMessageAndLocation.class);
 
 
         assertEquals(HttpStatus.OK, httpResponse.getStatus(), "response status is wrong");
-        Optional<QuasarResponse> oBody = httpResponse.getBody();
+        Optional<DecodedMessageAndLocation> oBody = httpResponse.getBody();
         assertTrue(oBody.isPresent(), "body is empty");
 
-        QuasarResponse response = oBody.get();
-        assertEquals(quasarResponseMock.getMessage(), response.getMessage());
-        assertEquals(quasarResponseMock.getPosition(), response.getPosition());
+        DecodedMessageAndLocation response = oBody.get();
+        assertEquals(decodedMessageAndLocationMock.getMessage(), response.getMessage());
+        assertEquals(decodedMessageAndLocationMock.getPosition(), response.getPosition());
     }
 
 
@@ -82,7 +81,7 @@ class TopSecretControllerTest extends AbstractRestControllerTest {
 
 
         try {
-            client.toBlocking().exchange(request, QuasarResponse.class);
+            client.toBlocking().exchange(request, DecodedMessageAndLocation.class);
             fail("A Not Found HttpClientResponseException must be thrown");
         } catch (HttpClientResponseException e) {
             assertEquals(HttpStatus.NOT_FOUND, e.getStatus());

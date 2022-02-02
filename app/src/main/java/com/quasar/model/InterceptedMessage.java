@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Representa un mensaje (codificado/incompleto) interceptado por un satelite
+ */
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

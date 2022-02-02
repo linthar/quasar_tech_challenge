@@ -2,8 +2,7 @@ package com.quasar.rest;
 
 
 import com.quasar.model.InterceptedMessage;
-import com.quasar.rest.dto.QuasarResponse;
-import com.quasar.rest.dto.TopSecretRequest;
+import com.quasar.model.DecodedMessageAndLocation;
 import com.quasar.rest.dto.TopSecretSplitRequest;
 import com.quasar.service.QuasarService;
 import io.micronaut.http.annotation.Body;
@@ -25,9 +24,9 @@ public class TopSecretSplitController {
     private QuasarService quasarService;
 
     @Post("/{satelliteName}")
-    public QuasarResponse post(@PathVariable(value = "satelliteName") @NotNull String satelliteName,
-                               @Body @Valid TopSecretSplitRequest request) {
-        log.debug("received POST: /topsecret_split/{}", satelliteName, request);
+    public DecodedMessageAndLocation post(@PathVariable(value = "satelliteName") @NotNull String satelliteName,
+                                          @Body @Valid TopSecretSplitRequest request) {
+        log.debug("received POST: /topsecret_split/{} {}", satelliteName, request);
         InterceptedMessage msg = new InterceptedMessage(satelliteName, request.getDistance(), request.getMessage());
         return quasarService.decodeSigleMessage(msg);
     }

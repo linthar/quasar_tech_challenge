@@ -2,7 +2,7 @@ package com.quasar.rest;
 
 import com.quasar.model.InterceptedMessage;
 import com.quasar.model.Point;
-import com.quasar.rest.dto.QuasarResponse;
+import com.quasar.model.DecodedMessageAndLocation;
 import com.quasar.rest.dto.TopSecretSplitRequest;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -30,25 +30,25 @@ class TopSecretSplitControllerTest extends AbstractRestControllerTest {
     @Test
     void postWithResponse() {
 
-        QuasarResponse quasarResponseMock = new QuasarResponse(new Point(-100.23, 4.56), "Some Mock Test");
+        DecodedMessageAndLocation decodedMessageAndLocationMock = new DecodedMessageAndLocation(new Point(-100.23, 4.56), "Some Mock Test");
         TopSecretSplitRequest topSecretSplitRequest =
                 new TopSecretSplitRequest(100d, new String[]{"message_word_0", "message_word_1", "message_word_2"});
 
         assertNotNull(quasarServiceMock);
-        when(quasarServiceMock.decodeSigleMessage(any(InterceptedMessage.class))).thenReturn(quasarResponseMock);
+        when(quasarServiceMock.decodeSigleMessage(any(InterceptedMessage.class))).thenReturn(decodedMessageAndLocationMock);
 
 
         URI uri = UriBuilder.of(ENDPOINT_URL + "/Kenobi").build();
         MutableHttpRequest request = HttpRequest.POST(uri, topSecretSplitRequest);
-        HttpResponse<QuasarResponse> httpResponse = client.toBlocking().exchange(request, QuasarResponse.class);
+        HttpResponse<DecodedMessageAndLocation> httpResponse = client.toBlocking().exchange(request, DecodedMessageAndLocation.class);
 
         assertEquals(HttpStatus.OK, httpResponse.getStatus(), "response status is wrong");
-        Optional<QuasarResponse> oBody = httpResponse.getBody();
+        Optional<DecodedMessageAndLocation> oBody = httpResponse.getBody();
         assertTrue(oBody.isPresent(), "body is empty");
 
-        QuasarResponse response = oBody.get();
-        assertEquals(quasarResponseMock.getMessage(), response.getMessage());
-        assertEquals(quasarResponseMock.getPosition(), response.getPosition());
+        DecodedMessageAndLocation response = oBody.get();
+        assertEquals(decodedMessageAndLocationMock.getMessage(), response.getMessage());
+        assertEquals(decodedMessageAndLocationMock.getPosition(), response.getPosition());
     }
 
 
@@ -67,7 +67,7 @@ class TopSecretSplitControllerTest extends AbstractRestControllerTest {
 
 
         try {
-            client.toBlocking().exchange(request, QuasarResponse.class);
+            client.toBlocking().exchange(request, DecodedMessageAndLocation.class);
             fail("A Not Found HttpClientResponseException must be thrown");
         } catch (HttpClientResponseException e) {
             assertEquals(HttpStatus.NOT_FOUND, e.getStatus());

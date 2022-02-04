@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # build jar
-./gradlew clean build
 
 export SERVER_PORT=8080
 export ROOT_LOGGING_LEVEL=INFO

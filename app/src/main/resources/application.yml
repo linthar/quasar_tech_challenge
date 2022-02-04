@@ -7,6 +7,25 @@ micronaut:
     cors:
       enabled: true
 
+
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
+
+jackson:
+  serialization:
+    WRITE_DATES_AS_TIMESTAMPS: false
+    indentOutput: true
+
+
 netty:
   default:
     allocator:

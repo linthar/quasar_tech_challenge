@@ -1,3 +1,14 @@
+# Documentacion de Challenge
+
+## SWAGGER:
+
+OpenAPI: [Swagger](http://localhost:8080/swagger/views/swagger-ui/index.html)
+(Este link requiere que el servicio este corriendo)
+
+
+
+
+http://localhost:8080/swagger/views/swagger-ui/index.html
 
 
 # El procedimiento es el siguiente:

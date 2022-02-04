@@ -1,5 +1,11 @@
 # Documentacion de Challenge
 
+## Test Coverage:
+
+luego de ejecutar el script test.sh se puede acceder al directorio de jacoco:
+{PATH}/quasar_tech_challenge/build/jacocoHtml/index.html
+
+
 ## SWAGGER:
 
 OpenAPI: [Swagger](http://localhost:8080/swagger/views/swagger-ui/index.html)

@@ -26,11 +26,9 @@ public class SatelliteService {
 
     @PostConstruct
     public void initSatellitesLocations() {
-
         saveLocation("kenobi", new Point(-500, -200));
         saveLocation("skywalker", new Point(100, -100));
         saveLocation("sato", new Point(500, 100));
-
     }
 
     /**
@@ -53,7 +51,7 @@ public class SatelliteService {
     public Point attemptToTriangulate() {
         List<Circle> allCircles = createCircles();
 
-        if (allCircles.size() > 3) {
+        if (allCircles.size() < 3) {
             // can't triangulate
             return null;
         }

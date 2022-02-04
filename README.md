@@ -13,7 +13,7 @@ run_docker.sh
 
 
 ## 3) DOCUMENTACION
-[Documentacion](./doc/README.md)
+[Documentacion](./docs/README.md)
 
 
 

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessageListService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">quasar</a> &gt; <a href="index.source.html" class="el_package">com.quasar.utils</a> &gt; <span class="el_source">MessageListService.java</span></div><h1>MessageListService.java</h1><pre class="source lang-java linenums">package com.quasar.utils;
+
+import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Singleton
+<span class="nc" id="L10">public class MessageListService {</span>
+
+    public String getMessage(List&lt;String&gt;... interceptedMessages) {
+
+<span class="nc" id="L14">        List&lt;String&gt; decodedMessage = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L15" title="All 2 branches missed.">        for (List&lt;String&gt; interceptedMsg : interceptedMessages) {</span>
+<span class="nc" id="L16">            decode(decodedMessage, new ArrayList(interceptedMsg));</span>
+        }
+<span class="nc" id="L18">        return asString(decodedMessage);</span>
+    }
+
+    private String asString(List&lt;String&gt; strList){
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        return strList.stream().filter(s -&gt; !s.isBlank())</span>
+<span class="nc" id="L23">                .collect(Collectors.joining(&quot; &quot;, &quot;&quot;, &quot;&quot;));</span>
+    }
+
+
+    private void decode(List&lt;String&gt; decodedMessage, List&lt;String&gt; interceptedMsg) {
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (decodedMessage.isEmpty()) {</span>
+<span class="nc" id="L30">            decodedMessage.addAll(interceptedMsg);</span>
+            // no hay datos previos, el msg actual es la unica info que tengo
+<span class="nc" id="L32">            return;</span>
+        }
+
+        // else
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (decodedMessage.size() != interceptedMsg.size()) {</span>
+            // ver (y ajustar) donde esta el desfasaje
+<span class="nc" id="L38">            ajustarDesfasaje(decodedMessage, interceptedMsg);</span>
+        }
+
+        //  decodedMessage.size() == interceptedMsg.size()
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        for (int i = 0; i &lt; decodedMessage.size(); i++) {</span>
+<span class="nc" id="L43">            String decodedString = decodedMessage.get(i);</span>
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (decodedString.isBlank()) {</span>
+<span class="nc" id="L46">                String interceptedString = interceptedMsg.get(i);</span>
+<span class="nc" id="L47">                decodedMessage.set(i, interceptedString);</span>
+            }
+
+        }
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * busca y ajusta el desfasaje entre los mensajes
+     *
+     * @param msg1
+     * @param msg2
+     */
+    private void ajustarDesfasaje(List&lt;String&gt; msg1, List&lt;String&gt; msg2) {
+<span class="nc" id="L60">        List&lt;String&gt; maxMsg = msg1;</span>
+<span class="nc" id="L61">        List&lt;String&gt; minMsg = msg2;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (maxMsg.size() &lt; minMsg.size()) {</span>
+<span class="nc" id="L63">            maxMsg = msg2;</span>
+<span class="nc" id="L64">            minMsg = msg1;</span>
+        }
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        for (int maxIdx = 0; maxIdx &lt; maxMsg.size(); maxIdx++) {</span>
+<span class="nc" id="L68">            String maxStr = maxMsg.get(maxIdx);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (!maxStr.isBlank()) {</span>
+<span class="nc" id="L70">                int minIdx = minMsg.indexOf(maxStr);</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">                if (minIdx != -1 &amp;&amp; minIdx != maxIdx) {</span>
+<span class="nc" id="L72">                    addBlanks(minMsg, minIdx, maxIdx - minIdx);</span>
+                }
+            }
+        }
+
+        /// si el desfasaje esta al final
+<span class="nc" id="L78">        addBlanks(minMsg, minMsg.size()-1,  maxMsg.size()-minMsg.size());</span>
+<span class="nc" id="L79">    }</span>
+
+    /**
+     * Adds N times a blank string to the list in the given index
+     * (will shift the fromIdx elements to the right)
+     *
+     * @param msgToAdjust String list to add the blanks
+     * @param fromIdx starting index to add the blanks
+     * @param quantity number of blanks to be added
+     */
+    private void addBlanks(List&lt;String&gt; msgToAdjust, int fromIdx, int quantity) {
+<span class="nc" id="L90">        List&lt;String&gt; newList = new ArrayList&lt;&gt;();</span>
+
+        // se agregan los elementos anterioes al index de inicio
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        for (int i = 0; i &lt; fromIdx; i++) {</span>
+<span class="nc" id="L94">            newList.add(msgToAdjust.get(i));</span>
+        }
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for (int i = 0; i &lt; quantity; i++) {</span>
+<span class="nc" id="L98">            newList.add(&quot;&quot;);</span>
+        }
+
+        // se agregan los elementos restantes
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        for (int i = fromIdx; i &lt; msgToAdjust.size(); i++) {</span>
+<span class="nc" id="L103">            newList.add(msgToAdjust.get(i));</span>
+        }
+
+<span class="nc" id="L106">        msgToAdjust.clear();</span>
+<span class="nc" id="L107">        msgToAdjust.addAll(newList);</span>
+<span class="nc" id="L108">    }</span>
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

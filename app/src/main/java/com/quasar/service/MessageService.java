@@ -1,12 +1,16 @@
 package com.quasar.service;
 
+import com.quasar.persistence.MessageRepository;
 import com.quasar.utils.MessageDecoder;
 import com.quasar.utils.Utils;
-import com.quasar.persistence.MessageRepository;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
 
 @Singleton
+@Slf4j
 public class MessageService {
 
     @Inject
@@ -30,9 +34,13 @@ public class MessageService {
      * collected information
      */
     public String attemptMessageDecode(String[] interceptedMessages) {
+        log.debug("attemptMessageDecode: {}", Utils.getDebugString(interceptedMessages));
+        if (messageRepository.isMessageWasDecoded()) {
+            log.debug("message was already decoded");
+            return getDecodedMessageOrNull();
+        }
 
         String[] newDecodedMessage;
-
         if (messageRepository.getDecodedMessage() == null) {
             newDecodedMessage = interceptedMessages;
         } else {
@@ -50,19 +58,28 @@ public class MessageService {
      */
     private String getDecodedMessageOrNull() {
         if (messageRepository.isMessageWasDecoded()) {
-            return Utils.asString(messageRepository.getDecodedMessage());
+            String msg = Utils.asString(messageRepository.getDecodedMessage());
+            log.debug("Answering DecodedMessage: {}", msg);
+            return msg;
         }
         // else
+        log.debug("message wasn't decoded. Answering NULL value");
         return null;
     }
 
 
     public void storeDecodedMessage(String[] decodedMessage) {
+
+        log.debug("storing (last version of) DecodedMessage: {}}", Utils.getDebugString(decodedMessage));
         messageRepository.setDecodedMessage(decodedMessage);
         // try to detect if the message was decoded
         boolean isDecoded = true;
         for (String word : decodedMessage) {
             isDecoded = isDecoded && !word.isBlank();
+        }
+
+        if (isDecoded) {
+            log.debug(" Message was Decoded!!: {}}", Utils.getDebugString(decodedMessage));
         }
         messageRepository.setMessageWasDecoded(isDecoded);
     }

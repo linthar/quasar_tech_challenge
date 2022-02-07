@@ -1,18 +1,14 @@
 package com.quasar.persistence;
 
 
-import com.quasar.model.InterceptedMessage;
-import com.quasar.model.Point;
 import jakarta.inject.Singleton;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Singleton
 @Getter
+@Slf4j
 public class MessageRepository {
 
     // se guardan los mensajes interceptados en un "storage en memoria"
@@ -27,6 +23,7 @@ public class MessageRepository {
      * cleans the previously stored data
      */
     public void clearData() {
+        log.debug("clearing Satellites data");
         decodedMessage = null;
         messageWasDecoded = false;
     }

@@ -33,6 +33,9 @@ public class Utils {
     }
 
 
+    public static String getDebugString(String[] strArray){
+        return Arrays.asList(strArray).stream().collect(Collectors.joining(", ", "", ""));
+    }
 
     /**
      * finds the point that belongs to both lists

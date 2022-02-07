@@ -3,6 +3,7 @@ package com.quasar.persistence;
 import com.quasar.model.InterceptedMessage;
 import com.quasar.model.Point;
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
+@Slf4j
 public class SatelliteRepository {
 
     // se guardan las locations en un "storage en memoria"
@@ -34,6 +36,7 @@ public class SatelliteRepository {
     }
 
     public void storeInterceptedMessage(InterceptedMessage interceptedMsg) {
+        log.debug("storing intercepted Message: {}", interceptedMsg);
         interceptedMessageBySatellite.put(interceptedMsg.getName().toLowerCase(), interceptedMsg);
     }
 
@@ -47,6 +50,7 @@ public class SatelliteRepository {
      * cleans the previously stored data
      */
     public void clearData() {
+        log.debug("clearing Satellites data");
         interceptedMessageBySatellite = new HashMap<>();
     }
 

@@ -7,22 +7,22 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static com.quasar.service.SatelliteService.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @MicronautTest
 class SatelliteServiceTest {
 
-    public static final String SATELLITE_NAME_KENOBI = "kenobi";
-    public static final String SATELLITE_NAME_SKYWALKER = "skywalker";
-    public static final String SATELLITE_NAME_SATO = "sato";
+
     @Inject
     private SatelliteService satelliteService;
-
     @Inject
     private SatelliteRepository satelliteRepository;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         // reset collected data
         satelliteRepository.clearData();
     }
@@ -59,7 +59,6 @@ class SatelliteServiceTest {
     }
 
 
-
     @Test
     void cantTriangulate() {
         // 3 message was intercepted
@@ -91,10 +90,8 @@ class SatelliteServiceTest {
     }
 
 
-
-
-    private InterceptedMessage storeInterceptedMessage (String satName, double distance){
-       String[] fakeMessage = new String[] {"fake", "message"};
+    private InterceptedMessage storeInterceptedMessage(String satName, double distance) {
+        String[] fakeMessage = new String[]{"fake", "message"};
         InterceptedMessage intercepted = new InterceptedMessage(satName, distance, fakeMessage);
         satelliteService.addInterceptedMessage(intercepted);
         return intercepted;

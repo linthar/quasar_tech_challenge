@@ -9,13 +9,19 @@ import com.quasar.utils.Utils;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Singleton
+@Slf4j
 public class SatelliteService {
+
+    public static final String SATELLITE_NAME_KENOBI = "kenobi";
+    public static final String SATELLITE_NAME_SKYWALKER = "skywalker";
+    public static final String SATELLITE_NAME_SATO = "sato";
 
     @Inject
     private SatelliteRepository satelliteRepository;
@@ -26,9 +32,9 @@ public class SatelliteService {
 
     @PostConstruct
     public void initSatellitesLocations() {
-        saveLocation("kenobi", new Point(-500, -200));
-        saveLocation("skywalker", new Point(100, -100));
-        saveLocation("sato", new Point(500, 100));
+        saveLocation(SATELLITE_NAME_KENOBI, new Point(-500, -200));
+        saveLocation(SATELLITE_NAME_SKYWALKER, new Point(100, -100));
+        saveLocation(SATELLITE_NAME_SATO, new Point(500, 100));
     }
 
     /**
@@ -38,10 +44,6 @@ public class SatelliteService {
         satelliteRepository.clearData();
     }
 
-    public void addSatelliteLocation() {
-
-    }
-
     /**
      * Tries to find triangulate the location of the message using the info collected
      *
@@ -49,9 +51,12 @@ public class SatelliteService {
      */
 
     public Point attemptToTriangulate() {
+        log.debug("attempting to Triangulate using known points");
         List<Circle> allCircles = createCircles();
 
+        log.debug("Circles created: {}", allCircles);
         if (allCircles.size() < 3) {
+            log.debug("can't triangulate. Not enough points: {}", allCircles.size());
             // can't triangulate
             return null;
         }
@@ -62,11 +67,15 @@ public class SatelliteService {
         Circle c2 = allCircles.get(2);
 
         List<Point> intersectionPoints01 = circleIntersectionCalculator.getIntersectionPoints(c0, c1);
+        log.debug("intersectionPoints01: {}", intersectionPoints01);
+
         List<Point> intersectionPoints12 = circleIntersectionCalculator.getIntersectionPoints(c1, c2);
+        log.debug("intersectionPoints12: {}", intersectionPoints12);
 
         // returns the common point or null (if location can't be triangulated)
-        return Utils.getCommonPoint(intersectionPoints01, intersectionPoints12);
-
+        Point attempt = Utils.getCommonPoint(intersectionPoints01, intersectionPoints12);
+        log.debug("attemptToTriangulate result: {}", attempt);
+        return attempt;
     }
 
 
@@ -88,10 +97,12 @@ public class SatelliteService {
 
 
     public void saveLocation(String satelliteName, Point point) {
+        log.debug("satellite {}. Saving location: {}", satelliteName, point);
         satelliteRepository.putLocation(satelliteName.toLowerCase(), point);
     }
 
     public void addInterceptedMessage(InterceptedMessage interceptedMessage) {
+        log.debug("satellite {}. InterceptedMessage : {}", interceptedMessage.getName(), interceptedMessage);
         satelliteRepository.storeInterceptedMessage(interceptedMessage);
     }
 

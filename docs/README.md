@@ -30,7 +30,7 @@ http://localhost:8080/swagger/views/swagger-ui/index.html
 
 ## Mensaje
 
-## Assumtions:
+## Assumptions:
 
 ### Desfasaje: 
  Se asume que el desfasaje esta al principio del mensaje, nunca en el medio o al final
